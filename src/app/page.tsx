@@ -27,7 +27,6 @@ import {
   ChevronDown,
   Plus,
   Clock,
-  LayoutGrid,
   Pencil,
   User,
   X,
@@ -708,13 +707,9 @@ export default function HomePage() {
           </div>
 
           {/* Top Status Header */}
-          <div className="px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between z-10 shrink-0 border-b border-stone-100/70">
-            <div className="flex items-center gap-2 sm:gap-3">
-              {/* Mobile NovaEdge Badge */}
-              <div className="w-7 h-7 rounded-full bg-[#1C1917] text-white flex md:hidden items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                N
-              </div>
-
+          <div className="px-2.5 sm:px-6 py-2 sm:py-3.5 flex items-center justify-between z-10 shrink-0 border-b border-stone-100/70 w-full overflow-hidden gap-1.5 sm:gap-3">
+            {/* Left Brand Identity (No 'N' Logo) */}
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
               <div className="relative w-7 h-7 sm:w-8 sm:h-8 drop-shadow-xs shrink-0 select-none">
                 <Image
                   src="/images/lumi-orb.png"
@@ -723,74 +718,72 @@ export default function HomePage() {
                   className="object-contain"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  <h2 className="font-bold text-sm text-[#292524]">Lumi</h2>
-                  <span className="text-[10px] font-semibold text-amber-900 bg-[#FEF3C7] px-1.5 sm:px-2 py-0.5 rounded-full border border-amber-300">
+                  <h2 className="font-bold text-sm sm:text-base text-[#292524] tracking-tight shrink-0">Lumi</h2>
+                  <span className="text-[9px] sm:text-[10px] font-semibold text-amber-900 bg-[#FEF3C7] px-1.5 sm:px-2 py-0.5 rounded-full border border-amber-300 shrink-0">
                     NovaEdge L&D
                   </span>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-[#78716C] truncate max-w-[150px] sm:max-w-none">
+                <p className="text-[10px] sm:text-[11px] text-[#78716C] truncate hidden sm:block">
                   HRIS Assignment (BHRM 32242)
                 </p>
               </div>
             </div>
 
-            {/* Header Right Actions */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Header Right Actions (100% Responsive & Visible) */}
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               {/* User Profile Badge (Click to Edit Username) */}
               <button
                 onClick={() => {
                   setNameInput(userName || displayName);
                   setIsNameModalOpen(true);
                 }}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 text-[10px] sm:text-[11px] text-stone-700 hover:text-amber-900 transition-colors cursor-pointer group shadow-2xs"
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 text-[10px] sm:text-[11px] text-stone-700 hover:text-amber-900 transition-colors cursor-pointer group shadow-2xs shrink-0"
                 title="Click to edit your username"
                 aria-label="Edit username"
               >
                 <div className="w-4 h-4 rounded-full bg-[#D97706] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
                   {(displayName[0] || 'U').toUpperCase()}
                 </div>
-                <span className="font-semibold max-w-[80px] sm:max-w-[120px] truncate">{displayName}</span>
+                <span className="font-semibold max-w-[48px] sm:max-w-[120px] truncate">{displayName}</span>
                 <Pencil className="w-2.5 h-2.5 text-stone-400 group-hover:text-amber-700 shrink-0" />
               </button>
 
-              <div className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-[10px] sm:text-[11px] text-stone-600">
+              <div className="hidden md:flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-[10px] sm:text-[11px] text-stone-600 shrink-0">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="font-medium">Online</span>
               </div>
 
               {/* Mobile Action Buttons (md:hidden) */}
-              <div className="flex md:hidden items-center gap-1">
+              <div className="flex md:hidden items-center gap-1 shrink-0">
                 <button
                   onClick={handleNewChat}
-                  className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center cursor-pointer shadow-2xs"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-700 flex items-center justify-center cursor-pointer shadow-2xs border border-stone-200/80 shrink-0"
                   title="New Chat"
+                  aria-label="New Chat"
                 >
-                  <Plus className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setShowAllQuickActions(prev => !prev)}
-                  className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center justify-center cursor-pointer shadow-2xs"
-                  title="Quick Actions"
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => setIsHistoryOpen(prev => !prev)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer border shadow-2xs ${
-                    isHistoryOpen ? 'bg-[#FEF3C7] text-amber-900 border-amber-300' : 'bg-stone-100 text-stone-700 border-stone-200'
+                  className={`h-7 sm:h-8 px-2 sm:px-2.5 rounded-full flex items-center gap-1 cursor-pointer border shadow-2xs active:scale-95 transition-all shrink-0 ${
+                    isHistoryOpen
+                      ? 'bg-[#FEF3C7] text-amber-900 border-amber-300 ring-1 ring-amber-300'
+                      : 'bg-stone-100 hover:bg-stone-200 text-stone-700 border-stone-200/80'
                   }`}
-                  title="History"
+                  title="Chat History"
+                  aria-label="Chat History"
                 >
-                  <Clock className="w-3.5 h-3.5" />
+                  <Clock className="w-3.5 h-3.5 text-amber-800 shrink-0" />
+                  <span className="text-[10px] sm:text-[11px] font-semibold text-stone-700">History</span>
                 </button>
               </div>
 
               {hasMessages && (
                 <button
                   onClick={handleNewChat}
-                  className="hidden md:inline-flex text-xs px-3 py-1 rounded-full border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium transition-colors cursor-pointer shadow-2xs"
+                  className="hidden md:inline-flex text-xs px-3 py-1 rounded-full border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium transition-colors cursor-pointer shadow-2xs shrink-0"
                 >
                   New Chat
                 </button>
@@ -799,7 +792,7 @@ export default function HomePage() {
           </div>
 
           {/* Quick Action Chips Bar */}
-          <div className="px-3 sm:px-6 py-2 z-10 shrink-0 bg-white/80 backdrop-blur-xs border-b border-stone-100">
+          <div className="px-2.5 sm:px-6 py-1.5 sm:py-2 z-10 shrink-0 bg-white/80 backdrop-blur-xs border-b border-stone-100 w-full overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-[10px] sm:text-[11px] font-semibold text-stone-500 uppercase tracking-wider">
                 Quick Actions
@@ -813,7 +806,9 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-1.5 overflow-x-auto custom-scrollbar pb-0.5">
+            <div className={`mt-1.5 flex gap-1 sm:gap-1.5 pb-0.5 custom-scrollbar ${
+              showAllQuickActions ? 'flex-wrap' : 'flex-nowrap overflow-x-auto scrollbar-none'
+            }`}>
               {[
                 { id: 'courses', label: 'Courses', icon: BookOpen },
                 { id: 'mandatory', label: 'Mandatory', icon: ShieldCheck },
@@ -831,7 +826,7 @@ export default function HomePage() {
                   <button
                     key={action.id}
                     onClick={() => handleQuickAction(action.id as QuickActionType)}
-                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-stone-50 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 border border-stone-200/80 hover:border-amber-300 transition-all cursor-pointer whitespace-nowrap"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium bg-stone-50 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 border border-stone-200/80 hover:border-amber-300 transition-all cursor-pointer whitespace-nowrap shrink-0"
                   >
                     <Icon className="w-3 h-3 text-amber-600" />
                     <span>{action.label}</span>

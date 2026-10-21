@@ -73,13 +73,10 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
         </div>
       </div>
 
-      {/* Bottom NovaEdge Brand Circle */}
-      <div className="flex flex-col items-center gap-2">
-        <div
-          className="w-11 h-11 rounded-full bg-[#1C1917] text-white flex items-center justify-center font-bold text-base shadow-sm tracking-wider cursor-default select-none"
-          title="NovaEdge Technologies (Pvt) Ltd"
-        >
-          N
+      {/* Bottom Subtle Brand Indicator */}
+      <div className="flex flex-col items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity">
+        <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 text-xs shadow-2xs select-none">
+          ✦
         </div>
       </div>
     </aside>
