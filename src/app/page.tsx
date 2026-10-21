@@ -76,6 +76,33 @@ export default function HomePage() {
     } catch {}
     return getEmployeeById('NE-104') || null;
   });
+  // Client-side hydration: check localStorage on mount and prompt for username if not set
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const stored = localStorage.getItem('lumi_username');
+        if (stored && stored.trim()) {
+          const trimmed = stored.trim();
+          setUserName(trimmed);
+          setNameInput(trimmed);
+          const found = EMPLOYEES_DATA.find(e =>
+            e.name.toLowerCase().includes(trimmed.toLowerCase()) ||
+            trimmed.toLowerCase().includes(e.name.toLowerCase().split(' ')[0]) ||
+            e.id.toLowerCase() === trimmed.toLowerCase()
+          );
+          if (found) setCurrentEmployee(found);
+          setIsNameModalOpen(false);
+        } else {
+          // If no username exists in localStorage, automatically prompt user on open!
+          setIsNameModalOpen(true);
+        }
+      } catch {
+        setIsNameModalOpen(true);
+      }
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handler to persist username and map to employee
   const handleSaveName = (nameToSave?: string) => {
