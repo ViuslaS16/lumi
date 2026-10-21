@@ -1,0 +1,366 @@
+[
+  {
+    "id": "chat_115",
+    "title": "New Conversation",
+    "createdAt": "2026-10-21T15:29:03.660Z",
+    "updatedAt": "2026-10-21T15:29:10.724Z",
+    "messages": [
+      {
+        "id": "user-115",
+        "sender": "user",
+        "text": "test",
+        "timestamp": "08:58 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214.",
+        "source": "local",
+        "isFallback": true,
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Which trainings are mandatory?",
+          "How do I get a certificate?",
+          "Talk to HR"
+        ],
+        "id": "msg-116",
+        "timestamp": "08:58 PM"
+      },
+      {
+        "id": "user-117",
+        "sender": "user",
+        "text": "hello",
+        "timestamp": "08:59 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214.",
+        "source": "local",
+        "isFallback": true,
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Which trainings are mandatory?",
+          "How do I get a certificate?",
+          "Talk to HR"
+        ],
+        "id": "msg-118",
+        "timestamp": "08:59 PM"
+      },
+      {
+        "id": "user-119",
+        "sender": "user",
+        "text": "who are you",
+        "timestamp": "08:59 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "You, your direct manager and the HR L&D team. Other employees cannot see your records.",
+        "source": "local",
+        "isFallback": false,
+        "suggestedFollowUps": [
+          "Do my training records appear in my performance review?",
+          "How is course completion recorded?",
+          "Can others see my ranking?"
+        ],
+        "id": "msg-120",
+        "timestamp": "08:59 PM"
+      }
+    ],
+    "employeeId": "NE-104"
+  },
+  {
+    "id": "chat_107",
+    "title": "New Conversation",
+    "createdAt": "2026-10-21T15:27:50.907Z",
+    "updatedAt": "2026-10-21T15:30:30.819Z",
+    "messages": [
+      {
+        "id": "user-107",
+        "sender": "user",
+        "text": "test 2",
+        "timestamp": "09:00 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214.",
+        "source": "local",
+        "isFallback": true,
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Which trainings are mandatory?",
+          "How do I get a certificate?",
+          "Talk to HR"
+        ],
+        "id": "msg-108",
+        "timestamp": "09:00 PM"
+      },
+      {
+        "id": "user-111",
+        "sender": "user",
+        "text": "test 2",
+        "timestamp": "09:00 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214.",
+        "source": "local",
+        "isFallback": true,
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Which trainings are mandatory?",
+          "How do I get a certificate?",
+          "Talk to HR"
+        ],
+        "id": "msg-112",
+        "timestamp": "09:00 PM"
+      }
+    ],
+    "employeeId": "NE-104"
+  },
+  {
+    "id": "chat_105",
+    "title": "New Conversation",
+    "createdAt": "2026-10-21T15:25:02.430Z",
+    "updatedAt": "2026-10-21T15:25:02.430Z",
+    "messages": [
+      {
+        "id": "user-105",
+        "sender": "user",
+        "text": "How to start",
+        "timestamp": "08:55 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214.",
+        "source": "local",
+        "isFallback": true,
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Which trainings are mandatory?",
+          "How do I get a certificate?",
+          "Talk to HR"
+        ],
+        "id": "msg-106",
+        "timestamp": "08:55 PM"
+      }
+    ],
+    "employeeId": "NE-104"
+  },
+  {
+    "id": "chat_102",
+    "title": "New Conversation",
+    "createdAt": "2026-10-21T15:24:50.539Z",
+    "updatedAt": "2026-10-21T15:30:39.177Z",
+    "messages": [
+      {
+        "id": "user-102",
+        "sender": "user",
+        "text": "What happens if I miss a mandatory training deadline?",
+        "timestamp": "09:00 PM"
+      },
+      {
+        "sender": "assistant",
+        "text": "You will get reminders from the system and your manager. Repeated delay may be recorded in your performance review.",
+        "source": "local",
+        "isFallback": false,
+        "suggestedFollowUps": [
+          "When is the deadline for mandatory training?",
+          "Do my training records appear in my performance review?",
+          "How often do I need to repeat mandatory training?"
+        ],
+        "id": "msg-103",
+        "timestamp": "09:00 PM"
+      }
+    ],
+    "employeeId": "NE-104"
+  },
+  {
+    "id": "test-upsert",
+    "title": "Test Upsert",
+    "createdAt": "2026-10-21T15:21:59.658Z",
+    "updatedAt": "2026-10-21T15:21:59.658Z",
+    "messages": [
+      {
+        "id": "1",
+        "sender": "user",
+        "text": "Testing upsert"
+      }
+    ],
+    "employeeId": "NE-104"
+  },
+  {
+    "id": "seed-1",
+    "title": "How do I enroll in a course?",
+    "createdAt": "2026-10-21T15:10:10.624Z",
+    "updatedAt": "2026-10-21T15:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s1-1",
+        "sender": "user",
+        "text": "How do I enroll in a course?",
+        "timestamp": "09:15 AM"
+      },
+      {
+        "id": "msg-s1-2",
+        "sender": "assistant",
+        "text": "Log in to NovaLearn (novalearn.novaedge.example), navigate to the Course Catalogue, select your course, and click Enroll. Internal self-paced courses are auto-approved.",
+        "timestamp": "09:15 AM",
+        "source": "local",
+        "suggestedFollowUps": [
+          "How many courses can I take at the same time?",
+          "Browse Course Catalog"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eea"
+  },
+  {
+    "id": "seed-2",
+    "title": "Which trainings are mandatory?",
+    "createdAt": "2026-10-21T13:10:10.624Z",
+    "updatedAt": "2026-10-21T13:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s2-1",
+        "sender": "user",
+        "text": "Which trainings are mandatory?",
+        "timestamp": "11:30 AM"
+      },
+      {
+        "id": "msg-s2-2",
+        "sender": "assistant",
+        "text": "All employees must complete Code of Conduct, Information Security Awareness, Data Privacy, and Workplace Health and Safety. InfoSec must be repeated every 6 months.",
+        "timestamp": "11:30 AM",
+        "source": "local",
+        "suggestedFollowUps": [
+          "When is the deadline for mandatory training?",
+          "What happens if I miss a deadline?"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eeb"
+  },
+  {
+    "id": "seed-3",
+    "title": "Check Progress: NE-104",
+    "createdAt": "2026-10-20T15:10:10.624Z",
+    "updatedAt": "2026-10-20T15:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s3-1",
+        "sender": "user",
+        "text": "NE-104",
+        "timestamp": "02:20 PM"
+      },
+      {
+        "id": "msg-s3-2",
+        "sender": "assistant",
+        "text": "Found employee record for Anika R. (NE-104). Here is your latest learning progress summary:",
+        "timestamp": "02:20 PM",
+        "source": "local",
+        "widgetType": "progress",
+        "employeeData": {
+          "id": "NE-104",
+          "name": "Anika R.",
+          "department": "Human Resources",
+          "coursesAssigned": 8,
+          "coursesCompleted": 6,
+          "points": 400,
+          "badge": "Silver",
+          "rank": 4,
+          "pendingCourse": "Effective Workplace Communication",
+          "pendingDueDate": "15 Nov"
+        },
+        "suggestedFollowUps": [
+          "View Leaderboard",
+          "Take a Quiz"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eec"
+  },
+  {
+    "id": "seed-4",
+    "title": "Can company pay my cert?",
+    "createdAt": "2026-10-20T15:10:10.624Z",
+    "updatedAt": "2026-10-20T15:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s4-1",
+        "sender": "user",
+        "text": "Can company pay my cert?",
+        "timestamp": "04:45 PM"
+      },
+      {
+        "id": "msg-s4-2",
+        "sender": "assistant",
+        "text": "Yes! NovaEdge reimburses up to LKR 150,000 per employee per year for approved external professional certifications. Pre-approval from your manager and HR is required.",
+        "timestamp": "04:45 PM",
+        "source": "local",
+        "suggestedFollowUps": [
+          "How do I claim reimbursement?",
+          "Do I need to stay with the company after an expensive course?"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eed"
+  },
+  {
+    "id": "seed-5",
+    "title": "Take a Quiz",
+    "createdAt": "2026-10-18T15:10:10.624Z",
+    "updatedAt": "2026-10-18T15:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s5-1",
+        "sender": "user",
+        "text": "Take a Quiz",
+        "timestamp": "10:00 AM"
+      },
+      {
+        "id": "msg-s5-2",
+        "sender": "assistant",
+        "text": "You can take our 5-question Communication Skills Quiz right here to test your knowledge and earn up to 20 learning points!",
+        "timestamp": "10:00 AM",
+        "source": "local",
+        "widgetType": "quiz",
+        "suggestedFollowUps": [
+          "Can I retake a quiz?",
+          "Leaderboard"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eee"
+  },
+  {
+    "id": "seed-6",
+    "title": "Do you offer presentation skills training?",
+    "createdAt": "2026-10-14T15:10:10.624Z",
+    "updatedAt": "2026-10-14T15:10:10.624Z",
+    "employeeId": "NE-104",
+    "messages": [
+      {
+        "id": "msg-s6-1",
+        "sender": "user",
+        "text": "Do you offer presentation skills training?",
+        "timestamp": "03:15 PM"
+      },
+      {
+        "id": "msg-s6-2",
+        "sender": "assistant",
+        "text": "Yes. Presentation Skills Essentials (Course ID: COMM-102) is offered as a half-day interactive workshop every alternate month.",
+        "timestamp": "03:15 PM",
+        "source": "local",
+        "suggestedFollowUps": [
+          "How do I enroll in a course?",
+          "Browse Course Catalog"
+        ]
+      }
+    ],
+    "_id": "6ad8d5d234bad9c4aa6b9eef"
+  }
+]

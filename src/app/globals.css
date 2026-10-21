@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary-amber: #D97706;
+  --color-deep-amber: #92400E;
+  --color-light-amber: #FBBF24;
+  --color-pale-amber: #FEF3C7;
+  --color-warm-ivory: #FFFBF5;
+  --color-white: #FFFFFF;
+  --color-main-text: #292524;
+  --color-secondary-text: #78716C;
+  --color-border: #E7E5E4;
+}
+
+body {
+  background: #EBE4DC;
+  color: var(--color-main-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Float animations for 3D orb and mascot */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+
+/* Custom scrollbar for chat container */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E7E5E4;
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #D6D3D1;
+}
