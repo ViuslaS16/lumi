@@ -6,7 +6,7 @@ import { SidebarDock } from '@/components/SidebarDock';
 import { RightHistorySidebar } from '@/components/RightHistorySidebar';
 import { ChatMessage, MessageItem } from '@/components/ChatMessage';
 import { QuickActionType } from '@/components/QuickActionMenu';
-import { getEmployeeById, EmployeeRecord } from '@/data/employees';
+import { getEmployeeById, EmployeeRecord, EMPLOYEES_DATA } from '@/data/employees';
 import { Course } from '@/data/courses';
 import { findBestFAQMatch } from '@/lib/faqMatcher';
 import { ChatSession } from '@/lib/chatDb';
@@ -28,13 +28,86 @@ import {
   Plus,
   Clock,
   LayoutGrid,
+  Pencil,
+  User,
+  X,
 } from 'lucide-react';
 
 export default function HomePage() {
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentEmployee, setCurrentEmployee] = useState<EmployeeRecord | null>(() => getEmployeeById('NE-104') || null);
+  const [userName, setUserName] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    try {
+      return localStorage.getItem('lumi_username') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [nameInput, setNameInput] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    try {
+      return localStorage.getItem('lumi_username') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [isNameModalOpen, setIsNameModalOpen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return !localStorage.getItem('lumi_username');
+    } catch {
+      return true;
+    }
+  });
+  const [currentEmployee, setCurrentEmployee] = useState<EmployeeRecord | null>(() => {
+    if (typeof window === 'undefined') return getEmployeeById('NE-104') || null;
+    try {
+      const stored = localStorage.getItem('lumi_username');
+      if (stored) {
+        const found = EMPLOYEES_DATA.find(e =>
+          e.name.toLowerCase().includes(stored.toLowerCase()) ||
+          stored.toLowerCase().includes(e.name.toLowerCase().split(' ')[0]) ||
+          e.id.toLowerCase() === stored.toLowerCase()
+        );
+        if (found) return found;
+      }
+    } catch {}
+    return getEmployeeById('NE-104') || null;
+  });
+
+  // Handler to persist username and map to employee
+  const handleSaveName = (nameToSave?: string) => {
+    const raw = (nameToSave !== undefined ? nameToSave : nameInput).trim();
+    if (!raw) return;
+
+    setUserName(raw);
+    setNameInput(raw);
+    try {
+      localStorage.setItem('lumi_username', raw);
+    } catch {}
+
+    const found = EMPLOYEES_DATA.find(e =>
+      e.name.toLowerCase().includes(raw.toLowerCase()) ||
+      raw.toLowerCase().includes(e.name.toLowerCase().split(' ')[0]) ||
+      e.id.toLowerCase() === raw.toLowerCase()
+    );
+    if (found) {
+      setCurrentEmployee(found);
+    } else if (!currentEmployee) {
+      setCurrentEmployee(getEmployeeById('NE-104') || null);
+    }
+
+    setIsNameModalOpen(false);
+  };
+
+  const displayName = userName
+    ? (userName.trim().split(' ')[0] || userName.trim())
+    : currentEmployee
+    ? currentEmployee.name.split(' ')[0]
+    : 'there';
+
   const [enrollToast, setEnrollToast] = useState<string | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -638,6 +711,23 @@ export default function HomePage() {
 
             {/* Header Right Actions */}
             <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* User Profile Badge (Click to Edit Username) */}
+              <button
+                onClick={() => {
+                  setNameInput(userName || displayName);
+                  setIsNameModalOpen(true);
+                }}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 text-[10px] sm:text-[11px] text-stone-700 hover:text-amber-900 transition-colors cursor-pointer group shadow-2xs"
+                title="Click to edit your username"
+                aria-label="Edit username"
+              >
+                <div className="w-4 h-4 rounded-full bg-[#D97706] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
+                  {(displayName[0] || 'U').toUpperCase()}
+                </div>
+                <span className="font-semibold max-w-[80px] sm:max-w-[120px] truncate">{displayName}</span>
+                <Pencil className="w-2.5 h-2.5 text-stone-400 group-hover:text-amber-700 shrink-0" />
+              </button>
+
               <div className="hidden xs:flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-[10px] sm:text-[11px] text-stone-600">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="font-medium">Online</span>
@@ -752,10 +842,23 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Greeting Title */}
-                <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-[#D97706] tracking-tight">
-                  Welcome back {currentEmployee ? currentEmployee.name.split(' ')[0] : 'Alex'}!
-                </h1>
+                {/* Greeting Title with Personalized Display & Edit Button */}
+                <div className="flex items-center justify-center gap-2 group flex-wrap">
+                  <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold text-[#D97706] tracking-tight">
+                    Welcome back <span className="underline decoration-amber-300/80 decoration-wavy decoration-2 underline-offset-4">{displayName}</span>!
+                  </h1>
+                  <button
+                    onClick={() => {
+                      setNameInput(userName || displayName);
+                      setIsNameModalOpen(true);
+                    }}
+                    className="p-1 sm:p-1.5 rounded-full hover:bg-amber-100 text-amber-700 hover:text-amber-900 transition-colors cursor-pointer inline-flex items-center justify-center"
+                    title="Change your username"
+                    aria-label="Change username"
+                  >
+                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
                 <p className="text-xs sm:text-sm md:text-base text-[#78716C] mt-1 sm:mt-2 max-w-lg font-normal leading-relaxed px-2">
                   Which training program, policy, or progress record do you want to explore today?
                 </p>
@@ -821,6 +924,7 @@ export default function HomePage() {
                   <ChatMessage
                     key={msg.id}
                     message={msg}
+                    userName={displayName}
                     onSelectSuggestion={handleSendMessage}
                     onSelectId={(id) => handleSendMessage(id)}
                     onEnrollCourse={handleEnrollCourse}
@@ -913,6 +1017,119 @@ export default function HomePage() {
             onClose={() => setIsHistoryOpen(false)}
             refreshTrigger={historyRefreshTrigger}
           />
+        )}
+
+        {/* Username Setup / Edit Modal Prompt on Launch */}
+        {isNameModalOpen && (
+          <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-stone-200/90 relative animate-in zoom-in-95 duration-200">
+              
+              {/* Close Button (available if username already set) */}
+              {userName && (
+                <button
+                  type="button"
+                  onClick={() => setIsNameModalOpen(false)}
+                  className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-700 transition-colors cursor-pointer"
+                  title="Close"
+                  aria-label="Close"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+
+              {/* Modal Core Graphic & Title */}
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-100 to-amber-50 border border-amber-300/80 flex items-center justify-center mb-3 shadow-inner relative">
+                  <div className="relative w-10 h-10 select-none">
+                    <Image
+                      src="/images/lumi-orb.png"
+                      alt="Lumi Core"
+                      fill
+                      className="object-contain drop-shadow-sm"
+                    />
+                  </div>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-bold text-stone-900">
+                  {userName ? 'Update Your Username' : 'Welcome to Lumi!'}
+                </h3>
+                <p className="text-xs sm:text-sm text-stone-500 mt-1.5 max-w-xs leading-relaxed">
+                  What is your name? Lumi will personalize your learning dashboard and training records.
+                </p>
+              </div>
+
+              {/* Name Input Form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSaveName();
+                }}
+                className="mt-6 space-y-4"
+              >
+                <div>
+                  <label htmlFor="user-name-field" className="block text-xs font-semibold text-stone-700 mb-1.5 text-left">
+                    Enter your name or employee ID:
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      id="user-name-field"
+                      type="text"
+                      autoFocus
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      placeholder="e.g. Visula, Anika, Nimal..."
+                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 text-sm font-medium text-stone-900 outline-none transition-all placeholder:text-stone-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Select Demo Employee Profiles */}
+                <div>
+                  <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider block mb-1.5 text-left">
+                    Or select demo profile:
+                  </span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {[
+                      { name: 'Anika Rajendra', short: 'Anika', role: 'HR Specialist', id: 'NE-104' },
+                      { name: 'Nimal Perera', short: 'Nimal', role: 'Dev Lead', id: 'NE-101' },
+                      { name: 'Sara Fernando', short: 'Sara', role: 'Support Eng', id: 'NE-103' },
+                    ].map((demo) => (
+                      <button
+                        key={demo.id}
+                        type="button"
+                        onClick={() => {
+                          setNameInput(demo.name);
+                          handleSaveName(demo.name);
+                        }}
+                        className="p-2 rounded-xl border border-stone-200 hover:border-amber-400 bg-stone-50/70 hover:bg-amber-50/50 text-left transition-all cursor-pointer group"
+                      >
+                        <div className="text-xs font-bold text-stone-800 group-hover:text-amber-900 truncate">
+                          {demo.short}
+                        </div>
+                        <div className="text-[9px] text-stone-500 truncate">
+                          {demo.id}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Submit Action */}
+                <button
+                  type="submit"
+                  disabled={!nameInput.trim()}
+                  className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all shadow-sm cursor-pointer ${
+                    nameInput.trim()
+                      ? 'bg-[#D97706] hover:bg-[#B45309] text-white active:scale-98 shadow-amber-600/20'
+                      : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                  }`}
+                >
+                  Continue to Lumi
+                </button>
+              </form>
+            </div>
+          </div>
         )}
       </div>
     </div>

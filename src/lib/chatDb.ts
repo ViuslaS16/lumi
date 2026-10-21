@@ -24,7 +24,7 @@ export interface ChatSession {
   employeeId?: string;
 }
 
-// Global cached client for Next.js hot reloading
+// Global cached client for Next.js and Vercel serverless functions
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
@@ -37,31 +37,45 @@ const COLLECTION_NAME = 'conversations';
 const FALLBACK_DIR = path.join(process.cwd(), 'data', 'nosql');
 const FALLBACK_FILE = path.join(FALLBACK_DIR, 'conversations.json');
 
+// In-memory fallback cache in case filesystem is read-only (such as Vercel serverless)
+let inMemoryFallback: ChatSession[] | null = null;
+
 function ensureFallbackDir() {
-  if (!fs.existsSync(FALLBACK_DIR)) {
-    fs.mkdirSync(FALLBACK_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(FALLBACK_FILE)) {
-    fs.writeFileSync(FALLBACK_FILE, JSON.stringify(INITIAL_SEEDED_CONVERSATIONS, null, 2), 'utf-8');
+  try {
+    if (!fs.existsSync(FALLBACK_DIR)) {
+      fs.mkdirSync(FALLBACK_DIR, { recursive: true });
+    }
+    if (!fs.existsSync(FALLBACK_FILE)) {
+      fs.writeFileSync(FALLBACK_FILE, JSON.stringify(INITIAL_SEEDED_CONVERSATIONS, null, 2), 'utf-8');
+    }
+  } catch {
+    // Expected on read-only cloud filesystems like Vercel
   }
 }
 
 function readFallback(): ChatSession[] {
+  if (inMemoryFallback) {
+    return inMemoryFallback;
+  }
   ensureFallbackDir();
   try {
     const raw = fs.readFileSync(FALLBACK_FILE, 'utf-8');
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    inMemoryFallback = parsed;
+    return parsed;
   } catch {
-    return INITIAL_SEEDED_CONVERSATIONS;
+    inMemoryFallback = [...INITIAL_SEEDED_CONVERSATIONS];
+    return inMemoryFallback;
   }
 }
 
 function writeFallback(data: ChatSession[]) {
+  inMemoryFallback = [...data];
   ensureFallbackDir();
   try {
     fs.writeFileSync(FALLBACK_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Failed to write local NoSQL fallback:', err);
+  } catch {
+    // Handled in memory if filesystem is read-only on Vercel
   }
 }
 
@@ -380,19 +394,26 @@ export const INITIAL_SEEDED_CONVERSATIONS: ChatSession[] = [
 ];
 
 async function getCollection(): Promise<Collection<ChatSession> | null> {
-  try {
-    let client: MongoClient;
-    if (process.env.NODE_ENV === 'development') {
-      if (!global._mongoClientPromise) {
-        const c = new MongoClient(MONGODB_URI, { serverSelectionTimeoutMS: 2000 });
-        global._mongoClientPromise = c.connect();
-      }
-      client = await global._mongoClientPromise;
-    } else {
-      const c = new MongoClient(MONGODB_URI, { serverSelectionTimeoutMS: 2000 });
-      client = await c.connect();
-    }
+  // If in production on Vercel and MONGODB_URI is still local 127.0.0.1, skip to fallback
+  const isLocalUri = !process.env.MONGODB_URI || 
+    process.env.MONGODB_URI.includes('127.0.0.1') || 
+    process.env.MONGODB_URI.includes('localhost');
 
+  if (process.env.NODE_ENV === 'production' && isLocalUri) {
+    console.warn('Vercel Notice: MONGODB_URI is not set to a cloud MongoDB Atlas URI in Vercel settings. Using resilient fallback.');
+    return null;
+  }
+
+  try {
+    if (!global._mongoClientPromise) {
+      const c = new MongoClient(MONGODB_URI, {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+      });
+      global._mongoClientPromise = c.connect();
+    }
+    const client = await global._mongoClientPromise;
     const db = client.db(DB_NAME);
     const col = db.collection<ChatSession>(COLLECTION_NAME);
 
@@ -403,7 +424,8 @@ async function getCollection(): Promise<Collection<ChatSession> | null> {
     }
     return col;
   } catch (err) {
-    console.warn('MongoDB not reachable, using resilient JSON document store fallback.', (err as Error).message);
+    console.warn('MongoDB not reachable, using resilient NoSQL fallback:', (err as Error).message);
+    global._mongoClientPromise = undefined; // Reset promise so next request can retry
     return null;
   }
 }

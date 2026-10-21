@@ -27,11 +27,13 @@ interface ChatMessageProps {
   onSelectSuggestion?: (text: string) => void;
   onSelectId?: (id: string) => void;
   onEnrollCourse?: (course: Course) => void;
+  userName?: string;
   onCardAction?: (action: 'progress' | 'leaderboard' | 'quiz' | 'skills' | 'menu') => void;
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({
   message,
+  userName,
   onSelectSuggestion,
   onSelectId,
   onEnrollCourse,
@@ -65,7 +67,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         {/* Name and timestamp */}
         <div className="flex items-center gap-1.5 text-[11px] text-[#78716C] mb-1 px-1">
           <span className="font-medium text-[#292524]">
-            {isUser ? 'You' : 'Lumi'}
+            {isUser ? (userName || 'You') : 'Lumi'}
           </span>
           <span>•</span>
           <span>{message.timestamp}</span>
