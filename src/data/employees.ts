@@ -162,3 +162,89 @@ export function getEmployeeById(id: string): EmployeeRecord | undefined {
 export function getTopEmployees(count: number = 5): EmployeeRecord[] {
   return [...EMPLOYEES_DATA].sort((a, b) => a.rank - b.rank).slice(0, count);
 }
+
+/**
+ * Assignment Badge Rules:
+ * Rank 1–3: Gold
+ * Rank 4–5: Silver
+ * Rank 6–10: Bronze
+ * Rank 11+: Keep going! (None)
+ */
+export function getBadgeForRank(rank: number): { badge: 'Gold' | 'Silver' | 'Bronze' | 'None'; color: string; label: string } {
+  if (rank >= 1 && rank <= 3) {
+    return { badge: 'Gold', color: '#FFD700', label: 'Gold Badge' };
+  }
+  if (rank >= 4 && rank <= 5) {
+    return { badge: 'Silver', color: '#C0C0C0', label: 'Silver Badge' };
+  }
+  if (rank >= 6 && rank <= 10) {
+    return { badge: 'Bronze', color: '#CD7F32', label: 'Bronze Badge' };
+  }
+  return { badge: 'None', color: '#78716C', label: 'Keep going!' };
+}
+
+/**
+ * Overall HR Analytics Summary Calculations
+ */
+export function getOverallAnalytics() {
+  const totalEmployees = EMPLOYEES_DATA.length;
+  const totalCompletedCourses = EMPLOYEES_DATA.reduce((acc, e) => acc + e.coursesCompleted, 0);
+  const totalAssignedCourses = EMPLOYEES_DATA.reduce((acc, e) => acc + e.coursesAssigned, 0);
+  const overallCompletionRate = totalAssignedCourses > 0
+    ? Number(((totalCompletedCourses / totalAssignedCourses) * 100).toFixed(2))
+    : 0;
+  const totalLearningPoints = EMPLOYEES_DATA.reduce((acc, e) => acc + e.points, 0);
+  const incompleteCount = EMPLOYEES_DATA.filter(e => e.coursesCompleted < e.coursesAssigned).length;
+
+  return {
+    totalEmployees,
+    totalCompletedCourses,
+    totalAssignedCourses,
+    overallCompletionRate, // Expected: 61.25%
+    totalLearningPoints,   // Expected: 3440
+    incompleteCount,       // Expected: 9
+  };
+}
+
+/**
+ * Department-Level Analytics Calculation
+ * department completion rate = total completed courses / total assigned courses * 100
+ */
+export interface DepartmentMetric {
+  department: string;
+  totalCompleted: number;
+  totalAssigned: number;
+  completionRate: number;
+  employeeCount: number;
+  totalPoints: number;
+}
+
+export function getDepartmentAnalytics(): DepartmentMetric[] {
+  const deptMap: Record<string, { completed: number; assigned: number; count: number; points: number }> = {};
+
+  EMPLOYEES_DATA.forEach(emp => {
+    if (!deptMap[emp.department]) {
+      deptMap[emp.department] = { completed: 0, assigned: 0, count: 0, points: 0 };
+    }
+    deptMap[emp.department].completed += emp.coursesCompleted;
+    deptMap[emp.department].assigned += emp.coursesAssigned;
+    deptMap[emp.department].count += 1;
+    deptMap[emp.department].points += emp.points;
+  });
+
+  return Object.keys(deptMap).map(department => {
+    const data = deptMap[department];
+    const completionRate = data.assigned > 0
+      ? Number(((data.completed / data.assigned) * 100).toFixed(1))
+      : 0;
+    return {
+      department,
+      totalCompleted: data.completed,
+      totalAssigned: data.assigned,
+      completionRate,
+      employeeCount: data.count,
+      totalPoints: data.points,
+    };
+  }).sort((a, b) => b.completionRate - a.completionRate);
+}
+

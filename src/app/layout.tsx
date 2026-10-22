@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { MainNavbar } from '@/components/MainNavbar';
 
 export const metadata: Metadata = {
   title: 'Lumi — NovaEdge Learning Assistant',
@@ -23,8 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="h-full bg-[#FFFBF5] text-[#292524] antialiased">
-        {children}
+      <body className="min-h-full bg-[#FFFBF5] text-[#292524] antialiased flex flex-col">
+        <MainNavbar />
+        <div className="flex-1 flex flex-col min-h-0">
+          {children}
+        </div>
       </body>
     </html>
   );

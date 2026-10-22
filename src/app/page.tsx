@@ -126,7 +126,22 @@ export default function HomePage() {
     }
 
     setIsNameModalOpen(false);
+    window.dispatchEvent(new CustomEvent('lumi_username_changed', { detail: raw }));
   };
+
+  useEffect(() => {
+    const handleNameChange = (e: Event) => {
+      const custom = e as CustomEvent<string>;
+      if (custom && custom.detail) {
+        setUserName(custom.detail);
+      } else {
+        const stored = localStorage.getItem('lumi_username');
+        if (stored) setUserName(stored);
+      }
+    };
+    window.addEventListener('lumi_username_changed', handleNameChange);
+    return () => window.removeEventListener('lumi_username_changed', handleNameChange);
+  }, []);
 
   const displayName = userName
     ? (userName.trim().split(' ')[0] || userName.trim())
@@ -685,9 +700,9 @@ export default function HomePage() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div className="min-h-[100dvh] h-[100dvh] w-full flex items-center justify-center p-0 sm:p-2 md:p-3 lg:p-6 bg-[#EBE4DC] overflow-hidden">
+    <div className="h-[calc(100dvh-3.5rem)] sm:h-[calc(100dvh-4rem)] w-full flex items-center justify-center p-0 sm:p-2 md:p-3 lg:p-4 bg-[#EBE4DC] overflow-hidden">
       {/* Outer Application Window Capsule */}
-      <div className="w-full max-w-[1440px] h-full sm:h-[94vh] max-h-none sm:max-h-[960px] bg-[#EFE9E2] rounded-none sm:rounded-[32px] md:rounded-[40px] shadow-none sm:shadow-2xl border-0 sm:border border-white/60 flex overflow-hidden relative">
+      <div className="w-full max-w-[1440px] h-full bg-[#EFE9E2] rounded-none sm:rounded-[28px] md:rounded-[36px] shadow-none sm:shadow-xl border-0 sm:border border-white/60 flex overflow-hidden relative">
         
         {/* Left Slim Navigation Dock (Hidden on mobile < md, visible on md+) */}
         <SidebarDock
@@ -699,95 +714,47 @@ export default function HomePage() {
         />
 
         {/* Center Main Stage (Chat Canvas) */}
-        <div className="flex-1 m-0 sm:my-2 md:my-3 sm:mr-2 md:mr-3 rounded-none sm:rounded-[28px] md:rounded-[36px] bg-white flex flex-col overflow-hidden relative shadow-none sm:shadow-sm border-0 sm:border border-stone-100">
+        <div className="flex-1 m-0 sm:my-2 md:my-3 sm:mr-2 md:mr-3 rounded-none sm:rounded-[24px] md:rounded-[30px] bg-white flex flex-col overflow-hidden relative shadow-none sm:shadow-sm border-0 sm:border border-stone-100">
           
           {/* Subtle Ambient Radial Amber Glow at the Center */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-none sm:rounded-[36px]">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-none sm:rounded-[30px]">
             <div className="absolute top-[18%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[480px] md:w-[540px] h-[300px] sm:h-[480px] md:h-[540px] rounded-full bg-gradient-to-b from-amber-300/25 via-amber-100/20 to-transparent blur-3xl opacity-80" />
           </div>
 
-          {/* Top Status Header */}
-          <div className="px-2.5 sm:px-6 py-2 sm:py-3.5 flex items-center justify-between z-10 shrink-0 border-b border-stone-100/70 w-full overflow-hidden gap-1.5 sm:gap-3">
-            {/* Left Brand Identity (No 'N' Logo) */}
-            <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
-              <div className="relative w-7 h-7 sm:w-8 sm:h-8 drop-shadow-xs shrink-0 select-none">
-                <Image
-                  src="/images/lumi-orb.png"
-                  alt="Lumi Core"
-                  fill
-                  className="object-contain"
-                />
+          {/* Chat Session Status Bar (Sub-header) */}
+          <div className="px-3 sm:px-6 py-2 sm:py-2.5 flex items-center justify-between z-10 shrink-0 border-b border-stone-100 bg-white/90 backdrop-blur-xs w-full overflow-hidden gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-[11px] text-amber-900 font-semibold shrink-0">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>NovaEdge Assistant</span>
               </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <h2 className="font-bold text-sm sm:text-base text-[#292524] tracking-tight shrink-0">Lumi</h2>
-                  <span className="text-[9px] sm:text-[10px] font-semibold text-amber-900 bg-[#FEF3C7] px-1.5 sm:px-2 py-0.5 rounded-full border border-amber-300 shrink-0">
-                    NovaEdge L&D
-                  </span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] text-[#78716C] truncate hidden sm:block">
-                  HRIS Assignment (BHRM 32242)
-                </p>
-              </div>
+              <span className="text-[11px] text-stone-500 truncate hidden sm:inline">
+                42 NovaEdge FAQs & Policies Grounded
+              </span>
             </div>
-
-            {/* Header Right Actions (100% Responsive & Visible) */}
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-              {/* User Profile Badge (Click to Edit Username) */}
+            
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
-                onClick={() => {
-                  setNameInput(userName || displayName);
-                  setIsNameModalOpen(true);
-                }}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-full bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 text-[10px] sm:text-[11px] text-stone-700 hover:text-amber-900 transition-colors cursor-pointer group shadow-2xs shrink-0"
-                title="Click to edit your username"
-                aria-label="Edit username"
+                onClick={handleNewChat}
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-medium cursor-pointer transition-colors shadow-2xs border border-stone-200/80"
+                title="Start New Conversation"
               >
-                <div className="w-4 h-4 rounded-full bg-[#D97706] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
-                  {(displayName[0] || 'U').toUpperCase()}
-                </div>
-                <span className="font-semibold max-w-[48px] sm:max-w-[120px] truncate">{displayName}</span>
-                <Pencil className="w-2.5 h-2.5 text-stone-400 group-hover:text-amber-700 shrink-0" />
+                <Plus className="w-3.5 h-3.5" />
+                <span>New Chat</span>
               </button>
 
-              <div className="hidden md:flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-stone-50 border border-stone-200/80 text-[10px] sm:text-[11px] text-stone-600 shrink-0">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-medium">Online</span>
-              </div>
-
-              {/* Mobile Action Buttons (md:hidden) */}
-              <div className="flex md:hidden items-center gap-1 shrink-0">
-                <button
-                  onClick={handleNewChat}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-700 flex items-center justify-center cursor-pointer shadow-2xs border border-stone-200/80 shrink-0"
-                  title="New Chat"
-                  aria-label="New Chat"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => setIsHistoryOpen(prev => !prev)}
-                  className={`h-7 sm:h-8 px-2 sm:px-2.5 rounded-full flex items-center gap-1 cursor-pointer border shadow-2xs active:scale-95 transition-all shrink-0 ${
-                    isHistoryOpen
-                      ? 'bg-[#FEF3C7] text-amber-900 border-amber-300 ring-1 ring-amber-300'
-                      : 'bg-stone-100 hover:bg-stone-200 text-stone-700 border-stone-200/80'
-                  }`}
-                  title="Chat History"
-                  aria-label="Chat History"
-                >
-                  <Clock className="w-3.5 h-3.5 text-amber-800 shrink-0" />
-                  <span className="text-[10px] sm:text-[11px] font-semibold text-stone-700">History</span>
-                </button>
-              </div>
-
-              {hasMessages && (
-                <button
-                  onClick={handleNewChat}
-                  className="hidden md:inline-flex text-xs px-3 py-1 rounded-full border border-stone-200 hover:bg-stone-50 text-stone-700 font-medium transition-colors cursor-pointer shadow-2xs shrink-0"
-                >
-                  New Chat
-                </button>
-              )}
+              <button
+                onClick={() => setIsHistoryOpen(prev => !prev)}
+                className={`px-2.5 sm:px-3 py-1 rounded-full flex items-center gap-1 cursor-pointer border shadow-2xs transition-all text-xs font-medium ${
+                  isHistoryOpen
+                    ? 'bg-[#FEF3C7] text-amber-900 border-amber-300 ring-1 ring-amber-300'
+                    : 'bg-stone-100 hover:bg-stone-200 text-stone-700 border-stone-200/80'
+                }`}
+                title="Chat History"
+              >
+                <Clock className="w-3.5 h-3.5 text-amber-800" />
+                <span>History</span>
+              </button>
             </div>
           </div>
 

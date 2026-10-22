@@ -31,7 +31,7 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({
   return (
     <div className="mt-2 rounded-2xl bg-white border border-[#E7E5E4] p-4 sm:p-5 shadow-xs max-w-md w-full">
       {/* Top Header */}
-      <div className="flex items-start justify-between pb-3 border-b border-[#F5F5F4]">
+      <div className="flex flex-wrap sm:flex-nowrap items-start justify-between gap-2 pb-3 border-b border-[#F5F5F4]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[#FEF3C7] border border-[#FDE68A] flex items-center justify-center text-[#92400E] font-semibold text-sm">
             {employee.name.slice(0, 2).toUpperCase()}

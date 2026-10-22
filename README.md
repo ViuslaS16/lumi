@@ -1,126 +1,94 @@
-# Lumi — NovaEdge Learning Assistant
+# Lumi — NovaEdge Learning Assistant & HRIS L&D Suite
 
-**Lumi** is an AI-powered Learning and Development (L&D) chatbot built for the **HRIS (BHRM 32242) Group Assignment (Task 2)** for **NovaEdge Technologies (Pvt) Ltd**, an IT services firm headquartered in Colombo, Sri Lanka.
+**Lumi** is an AI-powered Learning and Development (L&D) system built for the **HRIS (BHRM 32242) Group Assignment (Task 2)** for **NovaEdge Technologies (Pvt) Ltd**, an IT services firm headquartered in Colombo, Sri Lanka.
 
-Lumi operates entirely within a **single-page application** at `/` to streamline navigation, avoid separate dashboard pages, and allow interactive, conversational exploration of training policies, employee progress, leaderboard gamification, and skill development.
-
----
-
-## 1. What Lumi Does
-- **Answers 42 Official L&D FAQs**: Covers courses, enrollment limits, mandatory compliance deadlines, mentoring, certification reimbursement, study leave, and HR escalation.
-- **My Progress Lookup**: Allows employees to look up their course completion rate, points, rank, and tier badge directly in the chat feed (e.g. `NE-104` Anika R. — 75% completion, Silver badge, Rank #4).
-- **Gamified Leaderboard**: Displays the top 5 learners with Gold, Silver, and Bronze badges while maintaining learner privacy (ranks 6–10 and opt-out policy).
-- **Interactive Knowledge Quiz**: Features an embedded 5-question Communication Skills Quiz with instant answer feedback, point accumulation, and 3-attempt best score tracking.
-- **Skill-Gap Assessment**: A 3-question self-assessment (Communication, Presentation, Security) recommending tailored courses from the NovaEdge catalog.
-- **Simulated Course Enrollment**: Inline course cards with simulated enrollment confirmation.
-- **HR Contact Escalation**: Direct contact card displaying `learning@novaedge.example`, extension `214`, and operational hours.
+The application features the full **Lumi Chat Assistant** plus four dedicated modules spanning employee progress tracking, course discovery, gamified recognition, and management-level workforce analytics. All modules share a unified **MainNavbar** and cohesive warm amber visual identity.
 
 ---
 
-## 2. Technical Stack & Architecture
-- **Framework**: Next.js (App Router, React 19)
+## 1. Core Modules & Route Architecture
+
+| Route | Section Name | Description & Key Capabilities |
+|---|---|---|
+| `/` | **Lumi Chat Assistant** | Conversational L&D assistant grounded in 42 official NovaEdge FAQs, supporting policy queries, multi-turn chat history (MongoDB NoSQL + local fallback), quick actions, and simulated workflows. |
+| `/progress` | **Employee Learning Dashboard** | Individual employee progress tracking across `NE-101` through `NE-110`. Displays completion rate `(completed/assigned)*100`, progress bar, points, rank, tier badge, and pending courses. |
+| `/learn` | **Course Catalogue** | Full catalog of 6 internal NovaEdge training courses with live search by title/skill, category filters (Compliance, Technical, Leadership, Security, Productivity), and simulated enrollment persisted in `localStorage`. |
+| `/leaderboard` | **Learning Leaderboard** | Gamified employee recognition with Top-3 podium, Top-5 public named list, strict privacy masking for ranks 6–10 ("Anonymous Learner"), private employee rank lookup, and demo opt-out toggle. |
+| `/hr-analytics` | **HR Analytics Dashboard** | Management-level analytics with 4 verified KPIs (10 employees, 61.25% completion [49/80], 3,440 total pts, 9 incomplete learners), department completion bar chart, top 5 learners, and course benchmark analytics. |
+
+---
+
+## 2. Shared Design System & Navigation
+
+- **Unified Navigation (`MainNavbar`)**: Rendered persistently in `RootLayout` across every screen.
+  - Left: Lumi Orb mascot, "Lumi" brand, and "NovaEdge L&D" assignment pill.
+  - Center: Direct links to all 5 sections with active link indicators in warm amber.
+  - Right: Personal user profile badge (click to update username across all components), real-time "Online" status, and responsive mobile hamburger drawer.
+- **Amber Palette**:
+  - Primary Amber: `#D97706` / Hover: `#B45309`
+  - Accent Amber: `#F59E0B` / Amber Gold: `#FBBF24`
+  - Warm Dark Amber: `#92400E` / Deep Stone: `#292524`
+  - Amber Tint: `#FEF3C7` / Canvas Cream: `#FFFBF5` / Surface Capsule: `#EFE9E2`
+
+---
+
+## 3. Verified Calculations & Formulas
+
+### Employee Dashboard (`/progress`)
+- **Completion Rate (%)**: `Math.round((coursesCompleted / coursesAssigned) * 100)`
+- **Points Formula**: `coursesCompleted * 50` points (e.g., 6 courses completed = 300 pts from courses + quiz bonuses = 400 pts)
+- **Verified Benchmark Example (NE-104 Anika R.)**:
+  - Assigned: 8 courses
+  - Completed: 6 courses
+  - Completion Rate: **75%** (`6 / 8 * 100`)
+  - Points: **400 pts**
+  - Standing: **Rank #4**, **Silver Badge**
+  - Remaining: **2 courses**
+
+### HR Analytics KPIs (`/hr-analytics`)
+- **Total Employees**: `10`
+- **Total Courses Assigned**: `80` (8 courses per employee × 10 employees)
+- **Total Courses Completed**: `49`
+- **Overall Completion Rate**: `49 / 80 = 61.25%` (rounded to `61.3%`)
+- **Total Learning Points**: `3,440 pts` across all 10 employees
+- **Learners with Incomplete Mandatory Training**: `9` employees (only Elena Rostova NE-108 has completed 8/8)
+- **Department Completion Rates**:
+  - Human Resources: `75.0%` (12 / 16 courses)
+  - Customer Support: `68.8%` (11 / 16 courses)
+  - Engineering: `66.7%` (16 / 24 courses)
+  - Sales & Marketing: `56.3%` (9 / 16 courses)
+  - Finance: `43.8%` (7 / 16 courses)
+
+---
+
+## 4. Technical Stack
+
+- **Framework**: Next.js 16 (App Router, React 19)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS (Strictly tailored Amber Palette: `#D97706`, `#92400E`, `#FBBF24`, `#FEF3C7`, `#FFFBF5`)
+- **Styling**: Tailwind CSS
 - **Icons**: Lucide React
-- **AI SDK**: OpenAI JavaScript SDK configured for **DeepSeek API** (`https://api.deepseek.com`, model: `deepseek-chat`)
-- **Offline / Local Execution**: Runs 100% locally with zero external API dependencies required.
+- **Database / Storage**:
+  - MongoDB (via native driver) with local JSON fallback for conversation history
+  - `localStorage` for enrolled courses (`lumi_enrolled_courses`) and user profile (`lumi_username`)
+- **AI Grounding**: 42 curated NovaEdge L&D FAQs with local fuzzy/exact matching engine
 
 ---
 
-## 3. Project File Organization
-```
-Lumi/
-├── src/
-│   ├── app/
-│   │   ├── api/chat/route.ts       # Server-side API route for DeepSeek & grounding
-│   │   ├── globals.css             # Amber theme tokens & warm ivory layout
-│   │   ├── layout.tsx              # Root HTML & metadata definition
-│   │   └── page.tsx                # Single-page chat interface at /
-│   ├── components/
-│   │   ├── ChatMessage.tsx         # Message bubbles & rich widget dispatcher
-│   │   ├── CourseCatalogWidget.tsx # Filterable course catalog with simulated enroll
-│   │   ├── Header.tsx              # Brand logo, online status, demo badge & clear chat
-│   │   ├── HRContactCard.tsx       # L&D team contacts (email, extension 214)
-│   │   ├── LeaderboardCard.tsx     # Top 5 leaderboard with privacy disclaimer
-│   │   ├── ProgressCard.tsx        # Employee completion stats & badge (NE-104)
-│   │   ├── QuickActionMenu.tsx     # 8 quick-action flow chips
-│   │   ├── QuizWidget.tsx          # 5-question interactive communication quiz
-│   │   ├── SkillAssessmentWidget.tsx # 3-question confidence check & recommendations
-│   │   └── WelcomeBanner.tsx       # Greeting & starter question suggestions
-│   ├── data/
-│   │   ├── courses.ts              # 6 internal courses from assignment catalog
-│   │   ├── employees.ts            # 10 fictional demo employees (NE-101 to NE-110)
-│   │   ├── faqs.ts                 # All 42 assignment FAQs across categories A-H
-│   │   └── quizzes.ts              # 5 communication quiz questions & topics
-│   └── lib/
-│       └── faqMatcher.ts           # Explainable local FAQ matcher & typo engine
-├── .env.example                    # Placeholder DeepSeek environment variables
-├── package.json
-└── README.md
+## 5. Local Setup & Running
+
+```bash
+# 1. Clone repository
+git clone https://github.com/ViuslaS16/lumi.git
+cd lumi
+
+# 2. Install dependencies
+npm install
+
+# 3. Start development server
+npm run dev
 ```
 
----
-
-## 4. How the Chatbot Works
-
-### A. Local FAQ Retrieval Engine (`src/lib/faqMatcher.ts`)
-The chatbot uses an explainable, deterministic natural language matching engine that works completely offline:
-1. **Normalization**: Removes punctuation, lowercases strings, and expands common colloquial abbreviations and typos:
-   - `"how 2"` → `"how to"`
-   - `"certificat"` / `"cert"` → `"certificate"`
-   - `"register"` / `"signup"` → `"enroll"`
-   - `"compulsory"` → `"mandatory"`
-2. **Stop Word Filtering**: Removes generic words (`what`, `is`, `the`, `a`, `to`, `for`) so they do not produce false positive matches.
-3. **Basic Word Stemming**: Normalizes word forms (`badges` / `badge`, `courses` / `course`, `training` / `train`).
-4. **Exact & Semantic Scoring**:
-   - Canonical question exact match: **1.0**
-   - Alternative phrasing match: **1.0**
-   - Keyword token coverage ratio: **weighted scoring**
-5. **Smart Fallback**: If the query does not meet the confidence threshold (e.g. questions outside the knowledge base like *"what is for lunch in the cafeteria"*), Lumi returns the verified escalation answer:
-   > *"I'm not sure about that. Please contact the L&D team at learning@novaedge.example or call extension 214."*
-
-### B. Optional DeepSeek AI Integration (`src/app/api/chat/route.ts`)
-- If `DEEPSEEK_API_KEY` is provided in `.env.local`, the server passes the matched FAQ context to DeepSeek (`https://api.deepseek.com`, model `deepseek-chat`).
-- A strict system prompt ensures responses remain under 100 words, warm, encouraging, and strictly grounded in company policy without inventing facts.
-- **Fail-safe fallback**: If DeepSeek is unavailable, times out, or the API key is missing, Lumi instantly serves the verified local FAQ answer with zero disruption.
-
----
-
-## 5. How to Run Locally
-
-### Prerequisites
-- Node.js (v18 or higher recommended)
-- npm
-
-### Installation & Setup
-1. Clone or open the project folder in your terminal:
-   ```bash
-   cd Lumi
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. (Optional) Configure DeepSeek API key:
-   - Copy `.env.example` to `.env.local`:
-     ```bash
-     cp .env.example .env.local
-     ```
-   - Add your key:
-     ```env
-     DEEPSEEK_API_KEY=sk-your-actual-deepseek-api-key
-     DEEPSEEK_MODEL=deepseek-chat
-     ```
-   - *Note: If you do not have a DeepSeek key, you can skip this step entirely! Lumi will run using its local matching engine.*
-
-4. Start the local development server:
-   ```bash
-   npm run dev
-   ```
-5. Open your browser and navigate to:
-   ```
-   http://localhost:3000
-   ```
+Open `http://localhost:3000` in your web browser.
 
 To run a production build:
 ```bash
@@ -130,36 +98,22 @@ npm start
 
 ---
 
-## 6. Demo Presentation Script (for Viva)
+## 6. Demo Presentation Script (Viva Walkthrough)
 
-You can demonstrate all key features in under 3 minutes using this flow:
-1. **Welcome & Quick Suggestions**: Click *"How do I enroll in a course?"* or *"What training is mandatory?"*.
-2. **Typo / Informal Query Test**:
-   - Type `"how 2 get certificat"` → answers with certificate download policy (Q34).
-   - Type `"can company pay my cert"` → answers with LKR 150,000 reimbursement policy (Q35).
-   - Type `"my course not showing"` → answers with the 24-hour update lag policy (Q23).
-3. **My Progress Flow**:
-   - Click the **My Progress** button in Quick Actions.
-   - Enter `NE-104` (or click the sample chip).
-   - Shows **Anika R. (HR)**, 6 of 8 courses (75%), 400 points, Rank #4, and Silver badge.
-4. **Leaderboard Flow**:
-   - Click **Leaderboard** from the Progress card or Quick Actions.
-   - Shows top 5 learners (ranks 1–3 Gold, 4–5 Silver).
-   - Highlights user rank and shows the required privacy notice.
-5. **Interactive Quiz**:
-   - Click **Take a Quiz** → select **Communication Skills**.
-   - Answer the 5 questions (e.g. active listening = summarizing what speaker said).
-   - View final score, points earned (+20 pts), and retake attempt counter.
-6. **Skill-Gap Assessment**:
-   - Click **Skills Development** → answer the 3 Low/Medium/High prompts.
-   - View recommended courses with simulated Enroll button.
-7. **HR Escalation & Fallback**:
-   - Ask an unknown question (e.g., *"What is on the cafeteria menu today?"*).
-   - Lumi outputs the fallback directing to `learning@novaedge.example` or extension 214.
-   - Click **Talk to HR** to reveal the full contact card.
-8. **Clear Chat**: Click **Clear Chat** in the top right to reset the conversation.
-
----
-
-## 7. Fictional Data Disclosure
-As per the assignment requirements, all employee names (`Nimal P.`, `Anika R.`, etc.), policy limits (`LKR 150,000`), bond periods (`12 months for courses > LKR 100,000`), phone extensions (`214`), and email addresses (`learning@novaedge.example`) are purely fictional demonstration data created for NovaEdge Technologies (Pvt) Ltd.
+1. **Lumi Chat (`/`)**:
+   - Ask: *"What training is mandatory?"* or *"Can the company pay for my certification?"*.
+   - Verify explainable grounding in company policy (Q35 reimbursement up to LKR 150,000).
+   - Test personalizing username via the top-right profile pill.
+2. **Employee Dashboard (`/progress`)**:
+   - Select or search employee `NE-104`.
+   - Verify Anika R. displays 75% completion (6/8), 400 pts, Rank #4, and Silver badge.
+3. **Course Catalogue (`/learn`)**:
+   - Filter by "Security" or search for "Python".
+   - Click "Enroll Now" on an unenrolled course; observe status updates to "Enrolled" and persists in `localStorage`.
+4. **Leaderboard (`/leaderboard`)**:
+   - Highlight top-3 podium (1st Elena 490 pts, 2nd Carlos 460 pts, 3rd Sophia 430 pts).
+   - Show privacy enforcement: ranks 6 to 10 are anonymized as "Anonymous Learner".
+   - Test looking up rank privately or switching the opt-out toggle.
+5. **HR Analytics (`/hr-analytics`)**:
+   - Walk through the 4 executive KPIs: 10 Employees, 61.3% Completion, 3,440 Points, 9 Incomplete.
+   - Review Department Completion bar chart (HR leading at 75%, Finance at 43.8%).

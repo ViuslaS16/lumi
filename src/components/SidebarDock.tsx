@@ -1,5 +1,6 @@
 import React from 'react';
-import { Plus, Search, RotateCcw, LayoutGrid, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Plus, Search, RotateCcw, LayoutGrid, Clock, UserCheck, BookOpen, Trophy, BarChart3 } from 'lucide-react';
 
 interface SidebarDockProps {
   onNewChat: () => void;
@@ -70,6 +71,42 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
           >
             <Clock className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Section Navigation Links */}
+        <div className="w-8 border-t border-stone-200/60 my-1" />
+        <div className="flex flex-col items-center gap-2">
+          <Link
+            href="/progress"
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 flex items-center justify-center shadow-xs border border-stone-200/60 hover:border-amber-300 transition-all cursor-pointer"
+            title="Employee Learning Dashboard"
+          >
+            <UserCheck className="w-4 h-4 text-amber-700" />
+          </Link>
+
+          <Link
+            href="/learn"
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 flex items-center justify-center shadow-xs border border-stone-200/60 hover:border-amber-300 transition-all cursor-pointer"
+            title="Course Catalogue"
+          >
+            <BookOpen className="w-4 h-4 text-amber-700" />
+          </Link>
+
+          <Link
+            href="/leaderboard"
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 flex items-center justify-center shadow-xs border border-stone-200/60 hover:border-amber-300 transition-all cursor-pointer"
+            title="Learning Leaderboard"
+          >
+            <Trophy className="w-4 h-4 text-amber-700" />
+          </Link>
+
+          <Link
+            href="/hr-analytics"
+            className="w-10 h-10 rounded-full bg-white/80 hover:bg-[#FEF3C7] text-stone-700 hover:text-amber-900 flex items-center justify-center shadow-xs border border-stone-200/60 hover:border-amber-300 transition-all cursor-pointer"
+            title="HR Analytics Dashboard"
+          >
+            <BarChart3 className="w-4 h-4 text-amber-700" />
+          </Link>
         </div>
       </div>
 

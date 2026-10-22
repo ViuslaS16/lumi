@@ -28,7 +28,7 @@ export const HRContactCard: React.FC<HRContactCardProps> = ({ onActionClick }) =
             <span className="font-medium">Email:</span>
             <a
               href="mailto:learning@novaedge.example"
-              className="text-[#92400E] font-semibold underline hover:text-[#D97706]"
+              className="text-[#92400E] font-semibold underline hover:text-[#D97706] break-all sm:break-normal"
             >
               learning@novaedge.example
             </a>
